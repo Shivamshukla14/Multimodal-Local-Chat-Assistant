@@ -1,1 +1,1 @@
-# Multimodal-Local-Chat-App
+# Multimodal-Local-Chat-Assistant
