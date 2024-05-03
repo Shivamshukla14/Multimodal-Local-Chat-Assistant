@@ -1,11 +1,9 @@
 from prompt_templates import memory_prompt_template
-from langchain.chains import StuffDocumentsChain, LLMChain, ConversationalRetrievalChain
+from langchain.chains import LLMChain
 from langchain_community.embeddings import HuggingFaceInstructEmbeddings
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.prompts import PromptTemplate
 from langchain_community.llms import CTransformers
-from langchain_community.vectorstores import Chroma
-import chromadb
 import yaml
 
 
@@ -20,7 +18,7 @@ def create_llm(model_path = config["model_path"]["large"], model_type = config["
     return llm
 
 def create_embeddings(embeddings_path = config["embeddings_path"]):
-    return HuggingFaceInstructEmbeddings(embeddings_path)
+    return HuggingFaceInstructEmbeddings(model_name = embeddings_path)
 
 
 def create_chat_memory(chat_history):
@@ -36,6 +34,35 @@ def create_llm_chain(llm, chat_prompt, memory):
 def load_normal_chain(chat_history):
     return chatChain(chat_history)
 
+
+# def load_vectordb(embeddings):
+#     persistent_client = chromadb.PersistentClient("chroma_db")
+
+#     langchain_chroma = Chroma(
+#         client=persistent_client,
+#         collection_name="pdfs",
+#         embedding_function=embeddings,
+#     )
+
+#     return langchain_chroma
+
+# def load_pdf_chat_chain(chat_history):
+#     return pdf_chatChain(chat_history)
+
+# def load_retrieval_chain(llm, memory, vector_db):
+#     return RetrievalQA.from_llm(llm = llm, memory = memory, retriever = vector_db.as_retriever())
+
+
+# class pdf_chatChain:
+
+#     def __init__(self, chat_history):
+#         self.memory = create_chat_memory(chat_history)
+#         self.vector_db = load_vectordb(create_embeddings())
+#         llm = create_llm()
+#         self.llm_chain = load_retrieval_chain(llm, self.memory, self.vector_db)
+
+#     def run(self, user_input):
+#         return self.llm_chain.run(query = user_input, history = self.memory.chat_memory.messages ,stop = ["Human:"])
 
 class chatChain:
 
